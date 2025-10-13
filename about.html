@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - PDF SERVICES</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Color palette (only color-related rules added) */
+        :root {
+            --bg: #f3f4f6; /* gray-100 */
+            --surface: #ffffff;
+            --text: #1f2937; /* gray-800 */
+            --muted: #6b7280; /* gray-500 */
+            --primary: #4f46e5; /* indigo-600 */
+            --primary-hover: #4338ca; /* indigo-700 */
+            --footer-bg: #1f2937; /* gray-800 */
+            --scroll-track: #f1f1f1;
+            --scroll-thumb: #888;
+            --scroll-thumb-hover: #555;
+        }
+
+        /* Custom styles for better UI/UX (color-only additions) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background-color: var(--surface);
+        }
+
+        header a[href="index.html"] {
+            color: var(--primary);
+        }
+
+        header nav a {
+            color: var(--muted);
+        }
+
+        header nav a:hover {
+            color: var(--primary);
+        }
+
+        h2, h3, h4 {
+            color: var(--text);
+        }
+
+        .text-gray-600, .text-gray-700, .text-gray-800 {
+            color: var(--muted) !important;
+        }
+
+        .bg-gray-50 {
+            background-color: #f9fafb;
+        }
+
+        .bg-indigo-500, .bg-indigo-500.text-white {
+            background-color: var(--primary) !important;
+            color: #fff !important;
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: #fff;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--scroll-track);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scroll-thumb);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scroll-thumb-hover);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-indigo-600">
+                <i class="fas fa-file-pdf mr-2"></i>PDF SERVICES
+            </a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-indigo-600">Home</a>
+                <a href="index.html#tools" class="text-gray-600 hover:text-indigo-600">Tools</a>
+                <a href="about.html" class="text-indigo-600 font-semibold">About</a>
+            </nav>
+            <button class="md:hidden">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="bg-white p-8 md:p-12 rounded-xl shadow-lg">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-extrabold mb-4">About PDF SERVICES</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Your privacy-focused, free, and easy-to-use online PDF toolkit.</p>
+            </div>
+
+            <div class="space-y-10 max-w-4xl mx-auto">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center"><i class="fas fa-bullseye-pointer mr-3 text-indigo-500"></i>Our Mission</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        PDF SERVICES was created with a single goal: to provide a simple, high-quality, and completely free solution for common PDF tasks. We believe that powerful tools shouldn't come with a hefty price tag or compromise your privacy. Our mission is to empower everyone—from students to professionals—with the tools they need to manage their digital documents effortlessly and securely.
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 flex items-center"><i class="fas fa-shield-check mr-3 text-indigo-500"></i>Why Choose Us?</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2">Maximum Privacy & Security</h4>
+                            <p class="text-gray-700">Your files are your own. All processing is done directly in your web browser. This means your documents are never uploaded to our servers, ensuring your data remains private and secure on your computer.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2">Completely Free</h4>
+                            <p class="text-gray-700">No subscriptions, no hidden fees, and no sign-up required. All our tools are available for free, unlimited use. We are committed to keeping essential PDF utilities accessible to everyone.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2">Intuitive & User-Friendly</h4>
+                            <p class="text-gray-700">We designed our interface to be as clean and straightforward as possible. You don't need to be a tech expert to use our tools. Just select your file, choose your action, and get results in seconds.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2">Comprehensive Toolset</h4>
+                            <p class="text-gray-700">From merging and splitting documents to adding signatures and watermarks, our wide array of tools covers all the essential PDF editing needs you might have for your daily tasks.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 flex items-center"><i class="fas fa-tasks-alt mr-3 text-indigo-500"></i>How It Works</h3>
+                    <div class="flex flex-col md:flex-row justify-around text-center gap-8">
+                        <div class="flex-1">
+                            <div class="bg-indigo-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto text-2xl font-bold mb-4">1</div>
+                            <h4 class="font-bold text-lg mb-2">Select Your PDF</h4>
+                            <p class="text-gray-700">Click the "Select PDF File" button or simply drag and drop your document onto the home page.</p>
+                        </div>
+                         <div class="flex-1">
+                            <div class="bg-indigo-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto text-2xl font-bold mb-4">2</div>
+                            <h4 class="font-bold text-lg mb-2">Choose & Configure</h4>
+                            <p class="text-gray-700">Pick any tool from our collection and set the options according to your needs in the pop-up window.</p>
+                        </div>
+                         <div class="flex-1">
+                            <div class="bg-indigo-500 text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto text-2xl font-bold mb-4">3</div>
+                            <h4 class="font-bold text-lg mb-2">Process & Download</h4>
+                            <p class="text-gray-700">Click "Process," and your new file will be ready to download instantly, right from your browser.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 PDF SERVICES. All rights reserved.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>

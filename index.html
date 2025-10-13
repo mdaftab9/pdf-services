@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF SERVICES - Free Online PDF Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Color palette (only color-related rules added) */
+        :root {
+            --bg: #f3f4f6; /* gray-100 */
+            --surface: #ffffff;
+            --text: #1f2937; /* gray-800 */
+            --muted: #6b7280; /* gray-500 */
+            --primary: #4f46e5; /* indigo-600 */
+            --primary-hover: #4338ca; /* indigo-700 */
+            --danger: #ef4444; /* red-500 */
+            --danger-hover: #dc2626; /* red-600 */
+            --scroll-track: #f1f1f1;
+            --scroll-thumb: #888;
+            --scroll-thumb-hover: #555;
+            --footer-bg: #1f2937; /* gray-800 */
+        }
+
+        /* Custom styles for better UI/UX */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        header {
+            background-color: var(--surface);
+        }
+
+        header a[href="index.html"] {
+            color: var(--primary);
+        }
+
+        header nav a {
+            color: var(--muted);
+        }
+
+        header nav a:hover {
+            color: var(--primary);
+        }
+
+        .tool-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: var(--surface);
+            color: var(--text);
+        }
+
+        .tool-card i {
+            color: var(--primary);
+        }
+
+        .tool-card h4 {
+            color: var(--text);
+        }
+
+        .tool-card p {
+            color: var(--muted);
+        }
+
+        button#cta-button,
+        #modal-process {
+            background-color: var(--primary);
+            color: #fff;
+        }
+        button#cta-button:hover,
+        #modal-process:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button#remove-file-button {
+            background-color: var(--danger);
+            color: #fff;
+        }
+        button#remove-file-button:hover {
+            background-color: var(--danger-hover);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--scroll-track);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scroll-thumb);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scroll-thumb-hover);
+        }
+        /* Handwriting font style */
+        .handwriting-font {
+            font-family: 'Dancing Script', cursive;
+            color: var(--text);
+        }
+
+        footer {
+            background-color: var(--footer-bg);
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-indigo-600">
+                <i class="fas fa-file-pdf mr-2"></i>PDF SERVICES
+            </a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="text-gray-600 hover:text-indigo-600">Home</a>
+                <a href="#tools" class="text-gray-600 hover:text-indigo-600">Tools</a>
+                <a href="about.html" class="text-gray-600 hover:text-indigo-600">About</a>
+            </nav>
+            <button class="md:hidden">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section class="text-center bg-white p-10 rounded-xl shadow-lg mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Your One-Stop PDF Solution</h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Edit, merge, split, convert, and manage your PDFs with our powerful and easy-to-use online tools. Secure and completely free.</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="cta-button" class="w-full sm:w-auto bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 transition-transform transform hover:scale-105">
+                    <i class="fas fa-upload mr-2"></i>Select PDF File
+                </button>
+                <button id="remove-file-button" class="w-full sm:w-auto bg-red-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-red-600 transition-transform transform hover:scale-105 hidden">
+                    <i class="fas fa-times-circle mr-2"></i>Remove File
+                </button>
+                 <span id="drop-text" class="text-gray-500">or drop a PDF file here</span>
+            </div>
+            <input type="file" id="file-input" accept=".pdf" class="hidden" multiple>
+            <p id="file-info" class="mt-4 text-gray-500 font-medium"></p>
+        </section>
+
+        <section id="tools" class="py-12">
+            <h3 class="text-3xl font-bold text-center mb-8">Our Tools</h3>
+            <div id="tools-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                </div>
+        </section>
+        
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 PDF SERVICES. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-md max-h-full overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h4 id="modal-title" class="text-2xl font-bold">Tool Options</h4>
+                <button id="modal-close" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div id="modal-body">
+                </div>
+            <div class="mt-8 flex justify-end space-x-4">
+                <button id="modal-cancel" class="bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Cancel</button>
+                <button id="modal-process" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-700">Process</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-green-500 text-white py-3 px-6 rounded-lg shadow-xl transition-transform transform translate-x-full hidden">
+        <p id="toast-message"></p>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE MANAGEMENT ---
+            let selectedPdfBytes = null;
+            let selectedPdfName = 'document.pdf';
+            let multiFileBytes = [];
+            let multiFileNames = [];
+            
+            // --- DOM ELEMENTS ---
+            const fileInput = document.getElementById('file-input');
+            const ctaButton = document.getElementById('cta-button');
+            const fileInfo = document.getElementById('file-info');
+            const toolsGrid = document.getElementById('tools-grid');
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+            const modalCancel = document.getElementById('modal-cancel');
+            const modalProcess = document.getElementById('modal-process');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            const removeFileButton = document.getElementById('remove-file-button');
+            const dropText = document.getElementById('drop-text');
+
+            // Initialize PDF.js worker
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js`;
+
+            // --- PDF-LIB INSTANCE ---
+            const { PDFDocument, rgb, StandardFonts, degrees } = PDFLib;
+
+            // --- TOOLS DEFINITION ---
+            const tools = [
+                { id: 'merge', name: 'Merge PDF', icon: 'fa-compress-alt', desc: 'Combine multiple PDFs into one single document.', multi: true },
+                { id: 'split', name: 'Split PDF', icon: 'fa-cut', desc: 'Extract a range of pages from this PDF.' },
+                { id: 'compress', name: 'Compress PDF', icon: 'fa-file-archive', desc: 'Reduce file size by optimizing images.' },
+                { id: 'delete', name: 'Delete Pages', icon: 'fa-trash-alt', desc: 'Remove specific pages from your PDF file.' },
+                { id: 'extract', name: 'Extract Pages', icon: 'fa-file-export', desc: 'Create a new PDF from selected pages.' },
+                { id: 'addText', name: 'Add Text', icon: 'fa-font', desc: 'Insert text with custom fonts and colors.' },
+                { id: 'sign', name: 'Sign PDF', icon: 'fa-signature', desc: 'Add a handwritten-style signature to your PDF.' },
+                { id: 'addWatermark', name: 'Add Watermark', icon: 'fa-copyright', desc: 'Stamp text over your PDF pages.' },
+                { id: 'rotate', name: 'Rotate Pages', icon: 'fa-sync-alt', desc: 'Rotate specific pages by 90, 180, or 270 degrees.' },
+                { id: 'addPageNumbers', name: 'Add Page Numbers', icon: 'fa-hashtag', desc: 'Add page numbers to the corners or center of pages.' },
+                { id: 'toImages', name: 'PDF to Images', icon: 'fa-image', desc: 'Convert each PDF page into a high-quality JPG image.' },
+            ];
+
+            // --- UI FUNCTIONS ---
+            function renderTools() {
+                toolsGrid.innerHTML = '';
+                tools.forEach(tool => {
+                    const card = document.createElement('div');
+                    card.className = 'tool-card bg-white p-6 rounded-lg shadow-md cursor-pointer text-center';
+                    card.dataset.toolId = tool.id;
+                    card.innerHTML = `
+                        <i class="fas ${tool.icon} text-4xl text-indigo-500 mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">${tool.name}</h4>
+                        <p class="text-gray-600">${tool.desc}</p>
+                    `;
+                    card.addEventListener('click', () => onToolClick(tool));
+                    toolsGrid.appendChild(card);
+                });
+            }
+            
+            function showToast(message, type = 'success') {
+                toastMessage.textContent = message;
+                toast.classList.remove('bg-green-500', 'bg-red-500', 'translate-x-full');
+                toast.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.remove('translate-x-full'), 10); // Animate in
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full'); // Animate out
+                    setTimeout(() => toast.classList.add('hidden'), 300);
+                }, 4000);
+            }
+
+            function openModal(tool) {
+                modalTitle.textContent = tool.name;
+                let content = '';
+                switch (tool.id) {
+                    case 'split':
+                    case 'delete':
+                    case 'extract':
+                    case 'rotate':
+                        content = `<p class="mb-4">Enter page numbers or ranges (e.g., 1, 3-5, 8).</p>
+                                   <input type="text" id="page-ranges" class="w-full p-2 border rounded-md" placeholder="e.g., 1, 3-5, 8">`;
+                        if (tool.id === 'rotate') {
+                            content += `<p class="mt-4 mb-2">Select rotation angle:</p>
+                                        <select id="rotation-angle" class="w-full p-2 border rounded-md">
+                                            <option value="90">90 degrees clockwise</option>
+                                            <option value="180">180 degrees</option>
+                                            <option value="270">270 degrees clockwise</option>
+                                        </select>`;
+                        }
+                        break;
+                    case 'addText':
+                         content = `<p class="mb-4">Enter text and specify its properties.</p>
+                                   <textarea id="text-to-add" class="w-full p-2 border rounded-md mb-2" placeholder="Your text here..."></textarea>
+                                   <div class="grid grid-cols-2 gap-4">
+                                       <input type="number" id="text-page" class="w-full p-2 border rounded-md" placeholder="Page Number">
+                                       <input type="number" id="text-size" class="w-full p-2 border rounded-md" value="24" placeholder="Font Size">
+                                       <input type="number" id="text-x" class="w-full p-2 border rounded-md" placeholder="X position (from left)">
+                                       <input type="number" id="text-y" class="w-full p-2 border rounded-md" placeholder="Y position (from bottom)">
+                                   </div>`;
+                        break;
+                     case 'sign':
+                        content = `<p class="mb-2">Type your signature. It will be rendered in a handwriting style.</p>
+                                   <input type="text" id="signature-text" class="w-full p-3 border rounded-md mb-4 text-2xl handwriting-font" placeholder="Your Signature">
+                                   <div class="grid grid-cols-2 gap-4">
+                                       <input type="number" id="sign-page" class="w-full p-2 border rounded-md" placeholder="Page Number">
+                                       <input type="number" id="sign-size" class="w-full p-2 border rounded-md" value="50" placeholder="Signature Size">
+                                       <input type="number" id="sign-x" class="w-full p-2 border rounded-md" placeholder="X position (from left)">
+                                       <input type="number" id="sign-y" class="w-full p-2 border rounded-md" placeholder="Y position (from bottom)">
+                                   </div>`;
+                        break;
+                    case 'addWatermark':
+                        content = `<p class="mb-4">Enter the watermark text and its properties.</p>
+                                   <input type="text" id="watermark-text" class="w-full p-2 border rounded-md mb-2" placeholder="e.g., CONFIDENTIAL">
+                                   <div class="grid grid-cols-2 gap-4">
+                                       <input type="number" id="watermark-size" class="w-full p-2 border rounded-md" value="50" placeholder="Font Size">
+                                       <input type="number" id="watermark-opacity" class="w-full p-2 border rounded-md" value="0.5" placeholder="Opacity (0-1)" step="0.1" min="0" max="1">
+                                   </div>`;
+                        break;
+                    case 'addPageNumbers':
+                        content = `<p class="mb-4">Choose the position and style for your page numbers.</p>
+                                   <div class="space-y-4">
+                                       <div>
+                                           <label for="page-number-position" class="block mb-2 font-medium">Position:</label>
+                                           <select id="page-number-position" class="w-full p-2 border rounded-md">
+                                               <option value="bottom-center">Bottom Center</option>
+                                               <option value="bottom-left">Bottom Left</option>
+                                               <option value="bottom-right">Bottom Right</option>
+                                               <option value="top-center">Top Center</option>
+                                               <option value="top-left">Top Left</option>
+                                               <option value="top-right">Top Right</option>
+                                           </select>
+                                       </div>
+                                       <div>
+                                           <label for="page-number-size" class="block mb-2 font-medium">Font Size:</label>
+                                           <input type="number" id="page-number-size" class="w-full p-2 border rounded-md" value="12">
+                                       </div>
+                                       <div>
+                                           <label for="page-number-format" class="block mb-2 font-medium">Format:</label>
+                                           <input type="text" id="page-number-format" class="w-full p-2 border rounded-md" value="Page {page} of {total}">
+                                           <p class="text-sm text-gray-500 mt-1">Use {page} for current page and {total} for total pages.</p>
+                                       </div>
+                                   </div>`;
+                        break;
+                    case 'compress':
+                        content = `<p class="mb-4">Select an image quality level to reduce file size. Lower quality results in a smaller file.</p>
+                                   <label for="compress-quality" class="block mb-2 font-medium">Image Quality:</label>
+                                   <select id="compress-quality" class="w-full p-2 border rounded-md">
+                                       <option value="0.5">Low (50%)</option>
+                                       <option value="0.75" selected>Medium (75%)</option>
+                                       <option value="0.9">High (90%)</option>
+                                   </select>
+                                   <p class="text-sm text-gray-600 mt-2">Note: Compression is most effective on PDFs with many images.</p>`;
+                        break;
+                    case 'merge':
+                        content = `<p class="mb-4">You have selected ${multiFileNames.length} files. Click Process to merge them in the order they were selected.</p>
+                                   <ul class="list-decimal list-inside bg-gray-50 p-3 rounded-md max-h-48 overflow-y-auto">
+                                      ${multiFileNames.map(name => `<li>${name}</li>`).join('')}
+                                   </ul>`;
+                        break;
+                    case 'toImages':
+                        content = `<p>This will convert each page of your PDF into a JPG image. The images will be downloaded as a ZIP file.</p><p class="font-bold mt-2">This may take a moment for large PDFs.</p>`;
+                        break;
+                }
+                modalBody.innerHTML = content;
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+            }
+
+            // --- EVENT LISTENERS ---
+            ctaButton.addEventListener('click', () => fileInput.click());
+            removeFileButton.addEventListener('click', removeFile);
+            
+            fileInput.addEventListener('change', (e) => {
+                const files = e.target.files;
+                if (files.length === 0) return;
+
+                const toolId = fileInput.dataset.toolId;
+                const tool = tools.find(t => t.id === toolId);
+                
+                if (tool && tool.multi) {
+                    handleMultiFileSelect(files);
+                } else {
+                    handleSingleFileSelect(files[0]);
+                }
+            });
+            
+            modalClose.addEventListener('click', closeModal);
+            modalCancel.addEventListener('click', closeModal);
+
+            // --- FILE HANDLING ---
+            function removeFile() {
+                selectedPdfBytes = null;
+                selectedPdfName = 'document.pdf';
+                multiFileBytes = [];
+                multiFileNames = [];
+                fileInfo.textContent = '';
+                fileInput.value = ''; // Clears the file input selection
+                removeFileButton.classList.add('hidden');
+                dropText.classList.remove('hidden');
+                showToast('File removed.', 'success');
+            }
+
+            function handleSingleFileSelect(file) {
+                 if (!file.type.includes('pdf')) {
+                    showToast('Please select a valid PDF file.', 'error');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    selectedPdfBytes = e.target.result;
+                    selectedPdfName = file.name;
+                    fileInfo.textContent = `File selected: ${file.name}`;
+                    removeFileButton.classList.remove('hidden');
+                    dropText.classList.add('hidden');
+                    showToast('PDF loaded successfully!');
+                };
+                reader.readAsArrayBuffer(file);
+            }
+
+            function handleMultiFileSelect(files) {
+                multiFileBytes = [];
+                multiFileNames = [];
+                const readPromises = Array.from(files).map(file => {
+                     if (!file.type.includes('pdf')) {
+                        showToast(`Skipping non-PDF file: ${file.name}`, 'error');
+                        return Promise.resolve();
+                    }
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            multiFileBytes.push(e.target.result);
+                            multiFileNames.push(file.name);
+                            resolve();
+                        };
+                        reader.readAsArrayBuffer(file);
+                    });
+                });
+
+                Promise.all(readPromises).then(() => {
+                    if (multiFileBytes.length < 2) {
+                        showToast('Please select at least two PDF files to merge.', 'error');
+                        return;
+                    }
+                    fileInfo.textContent = `${multiFileBytes.length} files selected for merging.`;
+                    removeFileButton.classList.remove('hidden');
+                    dropText.classList.add('hidden');
+                    const mergeTool = tools.find(t => t.id === 'merge');
+                    openModal(mergeTool);
+                    modalProcess.onclick = () => processTool(mergeTool);
+                });
+            }
+
+            // --- CORE LOGIC ---
+            function onToolClick(tool) {
+                if (tool.multi) {
+                    fileInput.dataset.toolId = tool.id;
+                    fileInput.click(); // Trigger file selection for multi-file tools
+                    return;
+                }
+                
+                if (!selectedPdfBytes) {
+                    showToast('Please select a PDF file first.', 'error');
+                    fileInput.dataset.toolId = '';
+                    fileInput.click();
+                    return;
+                }
+                
+                openModal(tool);
+                modalProcess.onclick = () => processTool(tool);
+            }
+
+            async function processTool(tool) {
+                showToast('Processing...', 'success');
+                closeModal();
+                try {
+                    let newPdfBytes;
+                    switch (tool.id) {
+                        case 'merge':
+                            newPdfBytes = await mergePdfs();
+                            break;
+                        case 'split':
+                            newPdfBytes = await splitPdf();
+                            break;
+                        case 'delete':
+                            newPdfBytes = await deletePages();
+                            break;
+                        case 'extract':
+                            newPdfBytes = await extractPages();
+                            break;
+                        case 'rotate':
+                             newPdfBytes = await rotatePages();
+                            break;
+                        case 'addText':
+                            newPdfBytes = await addText();
+                            break;
+                        case 'sign':
+                            newPdfBytes = await signPdf();
+                            break;
+                        case 'addWatermark':
+                            newPdfBytes = await addWatermark();
+                            break;
+                        case 'compress':
+                            newPdfBytes = await compressPdf();
+                            break;
+                        case 'addPageNumbers':
+                            newPdfBytes = await addPageNumbers();
+                            break;
+                        case 'toImages':
+                            await convertToImages();
+                            return; // This function handles its own download
+                    }
+                    if (newPdfBytes) {
+                       downloadFile(newPdfBytes, `processed_${selectedPdfName}`);
+                    }
+                } catch (error) {
+                    console.error('Processing error:', error);
+                    showToast(`An error occurred: ${error.message}`, 'error');
+                }
+            }
+            
+            // --- PDF MANIPULATION FUNCTIONS ---
+
+            async function mergePdfs() {
+                const mergedPdf = await PDFDocument.create();
+                for (const pdfBytes of multiFileBytes) {
+                    const pdf = await PDFDocument.load(pdfBytes);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach(page => mergedPdf.addPage(page));
+                }
+                selectedPdfName = 'merged.pdf';
+                return mergedPdf.save();
+            }
+            
+            async function getPagesFromRanges() {
+                const pdfDoc = await PDFDocument.load(selectedPdfBytes);
+                const totalPages = pdfDoc.getPageCount();
+                const rangesInput = document.getElementById('page-ranges').value;
+                const pageIndices = new Set();
+                
+                const ranges = rangesInput.split(',').map(s => s.trim());
+                for (const range of ranges) {
+                    if (range.includes('-')) {
+                        let [start, end] = range.split('-').map(Number);
+                        start = Math.max(1, start);
+                        end = Math.min(totalPages, end);
+                        for (let i = start; i <= end; i++) {
+                            pageIndices.add(i - 1);
+                        }
+                    } else {
+                        const pageNum = Number(range);
+                        if (pageNum >= 1 && pageNum <= totalPages) {
+                            pageIndices.add(pageNum - 1);
+                        }
+                    }
+                }
+                return { pdfDoc, pageIndices: Array.from(pageIndices).sort((a,b)=>a-b) };
+            }
+
+            async function splitPdf() {
+                const { pageIndices } = await getPagesFromRanges();
+                if(pageIndices.length === 0) throw new Error("No valid pages selected.");
+
+                const pdfDoc = await PDFDocument.load(selectedPdfBytes);
+                const newDoc = await PDFDocument.create();
+                const copiedPages = await newDoc.copyPages(pdfDoc, pageIndices);
+                copiedPages.forEach(page => newDoc.addPage(page));
+                
+                return newDoc.save();
+            }
+
+            async function deletePages() {
+                const { pdfDoc, pageIndices } = await getPagesFromRanges();
+                if(pageIndices.length === 0) throw new Error("No valid pages selected.");
+                
+                let pagesRemoved = 0;
+                pageIndices.forEach(index => {
+                    pdfDoc.removePage(index - pagesRemoved);
+                    pagesRemoved++;
+                });
+
+                return pdfDoc.save();
+            }
+
+            async function extractPages() {
+                 return splitPdf(); // Same logic as split
+            }
+            
+            async function rotatePages() {
+                const { pdfDoc, pageIndices } = await getPagesFromRanges();
+                const angle = parseInt(document.getElementById('rotation-angle').value, 10);
+                if(pageIndices.length === 0) throw new Error("No valid pages selected.");
+                if(![90, 180, 270].includes(angle)) throw new Error("Invalid angle.");
+
+                pageIndices.forEach(index => {
+                    const page = pdfDoc.getPage(index);
+                    const currentRotation = page.getRotation().angle;
+                    page.setRotation({ angle: (currentRotation + angle) % 360, type: 'absolute' });
+                });
+
+                return pdfDoc.save();
+            }
+
+            async function addText() {
+                const pdfDoc = await PDFDocument.load(selectedPdfBytes);
+                const text = document.getElementById('text-to-add').value;
+                const pageNum = parseInt(document.getElementById('text-page').value, 10) - 1;
+                const fontSize = parseInt(document.getElementById('text-size').value, 10);
+                const x = parseInt(document.getElementById('text-x').value, 10);
+                const y = parseInt(document.getElementById('text-y').value, 10);
+
+                if(isNaN(pageNum) || pageNum < 0 || pageNum >= pdfDoc.getPageCount()) throw new Error("Invalid page number.");
+                if(!text) throw new Error("Text cannot be empty.");
+
+                const page = pdfDoc.getPages()[pageNum];
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+                page.drawText(text, {
+                    x,
+                    y,
+                    font: helveticaFont,
+                    size: fontSize,
+                    color: rgb(0, 0, 0),
+                });
+
+                return pdfDoc.save();
+            }
+            
+            async function signPdf() {
+                const text = document.getElementById('signature-text').value;
+                const pageNum = parseInt(document.getElementById('sign-page').value, 10) - 1;
+                const fontSize = parseInt(document.getElementById('sign-size').value, 10);
+                const x = parseInt(document.getElementById('sign-x').value, 10);
+                const y = parseInt(document.getElementById('sign-y').value, 10);
+
+                if (!text) throw new Error("Signature text cannot be empty.");
+                if (isNaN(pageNum) || isNaN(fontSize) || isNaN(x) || isNaN(y)) throw new Error("Invalid page, size, or position.");
+
+                // Create an offscreen canvas to render the text to an image
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const font = `${fontSize}px "Dancing Script"`;
+                ctx.font = font;
+                
+                const textMetrics = ctx.measureText(text);
+                canvas.width = textMetrics.width;
+                canvas.height = fontSize * 1.2; // Add some vertical padding
+                
+                // Re-apply styles after resizing
+                ctx.font = font;
+                ctx.fillStyle = "black";
+                ctx.textBaseline = 'top'; // Align to top to make drawing simpler
+                ctx.fillText(text, 0, 0);
+
+                const pngImageData = canvas.toDataURL('image/png');
+
+                // Embed the signature image into the PDF
+                const pdfDoc = await PDFDocument.load(selectedPdfBytes);
+                if (pageNum < 0 || pageNum >= pdfDoc.getPageCount()) throw new Error("Page number out of range.");
+
+                const pngImage = await pdfDoc.embedPng(pngImageData);
+                const page = pdfDoc.getPages()[pageNum];
+                
+                page.drawImage(pngImage, {
+                    x,
+                    y,
+                    width: pngImage.width,
+                    height: pngImage.height,
+                });
+
+                return pdfDoc.save();
+            }
+
+            async function addWatermark() {
+                const pdfDoc = await PDFDocument.load(selectedPdfBytes);
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+                const text = document.getElementById('watermark-text').value;
+                const fontSize = parseInt(document.getElementById('watermark-size').value, 10);
+                const opacity = parseFloat(document.getElementById('watermark-opacity').value);
+
+                if (!text) throw new Error("Watermark text cannot be empty.");
+                if (isNaN(fontSize) || isNaN(opacity)) throw new Error("Invalid size or opacity.");
+
+                const pages = pdfDoc.getPages();
+                for (const page of pages) {
+                    const { width, height } = page.getSize();
+                    const textWidth = helveticaFont.widthOfTextAtSize(text, fontSize);
+                    
+                    page.drawText(text, {
+                        x: width / 2 - textWidth / 2,
+                        y: height / 2,
+                        font: helveticaFont,
+                        size: fontSize,
+                        color: rgb(0.5, 0.5, 0.5),
+                        opacity: opacity,
+                        rotate: degrees(45),
+                    });
+                }
+                return pdfDoc.save();
+            }
+            
+            async function compressPdf() {
+                const quality = parseFloat(document.getElementById('compress-quality').value);
+                const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(selectedPdfBytes) });
+                const pdf = await loadingTask.promise;
+                const newPdfDoc = await PDFDocument.create();
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: 1.5 }); // Render at higher res for clarity before compressing
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                    const imageData = canvas.toDataURL('image/jpeg', quality);
+                    const jpgImage = await newPdfDoc.embedJpg(imageData);
+                    
+                    const {width, height} = page.getViewport({scale: 1.0});
+                    const newPage = newPdfDoc.addPage([width, height]);
+                    newPage.drawImage(jpgImage, {
+                        x: 0,
+                        y: 0,
+                        width: width,
+                        height: height,
+                    });
+                }
+                
+                return newPdfDoc.save();
+            }
+
+            async function addPageNumbers() {
+                const pdfDoc = await PDFDocument.load(selectedPdfBytes);
+                const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+                const position = document.getElementById('page-number-position').value;
+                const fontSize = parseInt(document.getElementById('page-number-size').value, 10);
+                const format = document.getElementById('page-number-format').value;
+
+                if (isNaN(fontSize)) throw new Error("Invalid font size.");
+
+                const pages = pdfDoc.getPages();
+                const totalPages = pages.length;
+                const margin = 40;
+
+                for (let i = 0; i < totalPages; i++) {
+                    const page = pages[i];
+                    const { width, height } = page.getSize();
+                    const pageNumText = format.replace('{page}', i + 1).replace('{total}', totalPages);
+                    const textWidth = helveticaFont.widthOfTextAtSize(pageNumText, fontSize);
+
+                    let x, y;
+                    // Y position
+                    if (position.includes('top')) {
+                        y = height - margin;
+                    } else { // bottom
+                        y = margin;
+                    }
+
+                    // X position
+                    if (position.includes('left')) {
+                        x = margin;
+                    } else if (position.includes('right')) {
+                        x = width - margin - textWidth;
+                    } else { // center
+                        x = width / 2 - textWidth / 2;
+                    }
+
+                    page.drawText(pageNumText, {
+                        x,
+                        y,
+                        font: helveticaFont,
+                        size: fontSize,
+                        color: rgb(0, 0, 0),
+                    });
+                }
+                return pdfDoc.save();
+            }
+
+            async function convertToImages() {
+                const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(selectedPdfBytes) }).promise;
+                const zip = new JSZip();
+                showToast(`Converting ${pdf.numPages} pages...`, 'success');
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const viewport = page.getViewport({ scale: 2.0 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    await page.render({ canvasContext: context, viewport: viewport }).promise;
+                    
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.9));
+                    zip.file(`page_${i}.jpg`, blob);
+                }
+                
+                showToast('Creating ZIP file...', 'success');
+                const zipBlob = await zip.generateAsync({ type: "blob" });
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(zipBlob);
+                link.download = `${selectedPdfName.replace('.pdf', '')}_images.zip`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('ZIP file downloaded!', 'success');
+            }
+
+
+            // --- UTILITY FUNCTIONS ---
+            function downloadFile(bytes, name) {
+                const blob = new Blob([bytes], { type: 'application/pdf' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Your file has been downloaded!', 'success');
+            }
+
+            // --- INITIALIZATION ---
+            renderTools();
+        });
+    </script>
+</body>
+</html>
